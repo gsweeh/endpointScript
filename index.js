@@ -6,7 +6,7 @@ import('node-fetch').then(nodeFetch => {
     async function makeAPICall() {
         try {
             // Make request to the endpoint
-            const response = await fetch('yourendpoint');
+            let response = await fetch('yourendpoint');
 
             // Check if response is successful
             if (!response.ok) {
@@ -14,7 +14,20 @@ import('node-fetch').then(nodeFetch => {
             }
 
             // Read response body as text
-            const responseBody = await response.text();
+            let responseBody = await response.text();
+            console.log('API call success. Response:', responseBody);
+
+            // 2nd endpoiint
+
+            response = await fetch('yourendpoint');
+
+            // Check if response is successful
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            // Read response body as text
+            responseBody = await response.text();
             console.log('API call success. Response:', responseBody);
 
             // Calculate next delay (24 hours + additional 10 minutes)
