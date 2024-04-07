@@ -5,7 +5,7 @@ import('node-fetch').then(nodeFetch => {
     // Function to make the API call
     async function makeAPICall() {
         try {
-            // Make request to the endpoint
+            // Make request to the 1st endpoint
             let response = await fetch('yourendpoint');
 
             // Check if response is successful
@@ -17,8 +17,10 @@ import('node-fetch').then(nodeFetch => {
             let responseBody = await response.text();
             console.log('API call success. Response:', responseBody);
 
-            // 2nd endpoiint
+            // Sleep for 5 seconds
+            await sleep(5000);
 
+            // Make request to the 2nd endpoint
             response = await fetch('yourendpoint');
 
             // Check if response is successful
@@ -37,6 +39,9 @@ import('node-fetch').then(nodeFetch => {
             // Schedule next API call
             setTimeout(makeAPICall, nextDelay);
 
+            // Start countdown for the next API call
+            countdownToNextAPICall(nextDelay);
+
             // Increment hit count
             hitCount++;
         } catch (error) {
@@ -50,6 +55,25 @@ import('node-fetch').then(nodeFetch => {
         const minutes = Math.floor((delay % (60 * 60 * 1000)) / (60 * 1000));
         const seconds = Math.floor((delay % (60 * 1000)) / 1000);
         return `${hours} hours ${minutes} minutes ${seconds} seconds`;
+    }
+
+    // Function to sleep for a specified number of milliseconds
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // Function to start countdown for the next API call
+    function countdownToNextAPICall(delay) {
+        let remainingTime = delay;
+        const intervalId = setInterval(() => {
+            remainingTime -= 1000;
+            if (remainingTime <= 0) {
+                clearInterval(intervalId);
+                console.log('\rNext API call in progress...');
+            } else {
+                process.stdout.write(`\rNext API call in: ${calculateRemainingTime(remainingTime)}`);
+            }
+        }, 1000);
     }
 
     // Variable to keep track of the number of hits
